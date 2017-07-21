@@ -83,8 +83,8 @@ createPlot=function(efile, dateRange, metric, agg, md, dow, disp, acuity,
 			sHour, eHour, sMin, eMin, excludeHolidays)
 	
 	# default file name downloads
-	plotted$fileNamePlot=defaultFileName(locName, dateRange, metric, agg, "plot")
-	plotted$fileNameTable=defaultFileName(locName, dateRange, metric, agg, "table")
+	plotted$fileNamePlot=defaultFileName(dateRange, metric, agg, "plot")
+	plotted$fileNameTable=defaultFileName(dateRange, metric, agg, "table")
 	
 	return(plotted)
 }

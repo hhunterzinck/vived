@@ -26,6 +26,18 @@ illegal=function(start, end, metric, agg, disp)
 	return(msg)
 }
 
+# update an list object to include only the indeces requested
+updateObj=function(obj, indeces)
+{
+	upt=list()
+	for(i in 1:length(obj))
+	{
+		upt[[i]]=obj[[i]][indeces]
+	}
+	names(upt)=names(obj)
+	return(upt)
+}
+
 # calculate occupancy for the given object
 calcOcc=function(vStart,vEnd, iStart, iEnd)
 {
@@ -407,40 +419,6 @@ getMinutes=function(sHourNum, eHourNum, sMinNum, eMinNum)
 	return(minutes)
 }
 
-
-# construct a default name for saved plot files from input parameters
-defaultFileName=function(locName, dateRange, metric, agg, dataType)
-{
-	if(dataType=="plot")
-	{
-		suffix="pdf"
-	} else if(dataType=="table")
-	{
-		suffix="csv"
-	} else
-	{
-		cat("Warning: Data type ",dataType, " is not accounted for in defaultFileName(). Assuming text file with suffix txt.\n",sep="")
-		suffix="txt"
-	}
-	
-	# just return vived.* for unknown locName
-	if(is.na(locName))
-	{
-		return(paste("vived.",suffix,sep=""))
-	}
-
-	# format parameters choices
-	aLoc=gsub(" ","_",locName)
-	sDate=gsub("-","",dateRange[1])
-	eDate=gsub("-","",dateRange[2])
-	aMetric=METRICS_ABBREV[metric]
-	aAgg=AGG$AGG_ALL_ABBREV[agg]
-	
-	# concatenate and return
-	filename=paste(sDate,eDate,aLoc,aMetric,aAgg,"vived",suffix,sep=".")
-	return(filename)
-}
-
 # construct a data frame to display on the dashboard from metric data and the given aggregation view
 makeTable=function(tabData,agg,cats=NA)
 { 
@@ -459,7 +437,7 @@ makeTable=function(tabData,agg,cats=NA)
 		}
 	} else
 	{
-		smat=calcStats(tabData,agg, cats)
+		smat=calcStats(tabData, agg, cats)
 	}
 	
 	# return as data frame
@@ -896,3 +874,32 @@ arrangeUnknown=function(vec,uValue,uLast)
 	# return with uValue first
 	return(c(vec[index],vec[-index]))
 }
+
+# get default file name
+defaultFileName=function(dateRange, metric, agg, dataType)
+{
+	if(dataType=="plot")
+	{
+		suffix="pdf"
+	} else if (dataType=="table")
+	{
+		suffix="csv"
+	} else
+	{
+		cat("Warning: Data type ", dataType, " is not accounted for in defaultFileName().  Assuming file with suffix txt.\n", sep="")
+	}
+
+	# format parameter choices
+	sDate=gsub("-","", format(dateRange[1],format="%Y-%m-%d"))
+	eDate=gsub("-","", format(dateRange[2],format="%Y-%m-%d"))
+	aMetric=METRICS_ABBREV[metric]
+	aAgg=AGG$AGG_ALL_ABBREV[agg]
+
+	# concatenate and return
+	filename=paste(sDate,eDate,aMetric,aAgg,"vived",suffix,sep=".")
+	return(filename)
+}
+
+
+
+
