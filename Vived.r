@@ -169,7 +169,7 @@ server <- function(input, output)
 	# output data table
 	output$myTable=renderDataTable(
 	{
-		datatable(data()$table, rownames=FALSE, options=list(pageLength=5))
+		datatable(data()$table, rownames=TRUE, options=list(pageLength=5))
 	})
 	
 	# setup download button for plot

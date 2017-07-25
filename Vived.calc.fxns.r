@@ -185,18 +185,8 @@ calcNumVisit=function(obj, start, nday, dow, sHourNum, eHourNum, sMinNum, eMinNu
 }
 
 # calculate the amount of time in intervals between pairs of timestamps
-calcTimeIntervals=function(t1, t2, maxTime, dow, sHourNum, eHourNum, sMinNum, eMinNum, holidays)
+calcTimeIntervals=function(t1, t2, maxTime)
 {
-	# get visits where initial time is in days of the week and hour time range and not holidays, if required
-	indeces=which(is.element(format(t1,"%a"),dow) 
-		& is.element(format(t1,"%H:%M"),getMinutes(sHourNum, eHourNum, sMinNum, eMinNum)))
-	if(length(holidays)>0)
-	{
-		indeces=union(indeces,which(is.element(format(t1,"%Y-%m-%d"),holidays)))
-	}
-	t1=t1[indeces]
-	t2=t2[indeces]
-
 	# calculate time interval in minutes
 	visitMetric=(as.double(t2)-as.double(t1))/60
 	

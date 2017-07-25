@@ -75,7 +75,9 @@ createPlot=function(efile, dateRange, metric, agg, md, dow, disp, acuity,
 	preproc=preprocess(raw)
 	
 	# filter data according to metric
-	filtered=filter(preproc, startDate, endDate, md, dow, disp, acuity, excludeHolidays, metric=metric)
+	filtered=filter(preproc, startDate, endDate, md, dow, disp, acuity, 
+		excludeHolidays, metric=metric, sHourNum=as.double(sHour), 
+		eHourNum=as.double(eHour), sMinNum=as.double(sMin), eMinNum=as.double(eMin))
 	
 	# generate plot
 	locName=NA
@@ -205,7 +207,7 @@ preprocess=function(obj)
 }
 
 # filter functions
-filter=function(obj, start, end, md, dow, disp, acuity, excludeHolidays, metric="")
+filter=function(obj, start, end, md, dow, disp, acuity, excludeHolidays, metric="", sHourNum=NA, eHourNum=NA, sMinNum=NA, eMinNum=NA)
 {
 	# filter by date range
 	if(metric==OCC || is.element(metric,METRICS_OCC_SPLIT))
@@ -219,8 +221,13 @@ filter=function(obj, start, end, md, dow, disp, acuity, excludeHolidays, metric=
 	}
 	fil=updateObj(obj,indeces)
 	
-	# filter by day of the week
-	if(length(dow)<length(LABEL_DOW) & !(metric==OCC || is.element(metric,METRICS_OCC_SPLIT)))
+	# filter by day of the week and hour of the day (if applicable)
+	if(is.element(metric, METRICS$Visit))
+	{
+		indeces=which(is.element(format(fil$ti,"%a"),dow) 
+			& is.element(format(fil$ti,"%H:%M"),getMinutes(sHourNum, eHourNum, sMinNum, eMinNum)))
+		fil=updateObj(fil,indeces)
+	} else if(length(dow)<length(LABEL_DOW) & !(metric==OCC || is.element(metric,METRICS_OCC_SPLIT)))
 	{
 		visitDow=as.double(format(fil$ti,"%w"))
 		dowNum=match(dow,LABEL_DOW)-1
@@ -539,29 +546,20 @@ plotMetric=function(preproc,obj, locName, metric, agg, start, end, dow, md, disp
 		# calculate visit metric
 		if(metric==LOS)
 		{
-			visitMetric=calcTimeIntervals(obj$ti,obj$to,LOS_MAX,dow,sHourNum,eHourNum, sMinNum, eMinNum, holidays)
+			visitMetric=calcTimeIntervals(obj$ti,obj$to,LOS_MAX)
 		} else if(metric==WAIT_IT)
 		{
-			visitMetric=calcTimeIntervals(obj$ti,obj$tt,TRIAGE_MAX,dow,sHourNum,eHourNum, sMinNum, eMinNum, holidays)
+			visitMetric=calcTimeIntervals(obj$ti,obj$tt,TRIAGE_MAX)
 		} else if(metric==WAIT_IS)
 		{
-			visitMetric=calcTimeIntervals(obj$ti,obj$ts,SEEN_MAX,dow,sHourNum,eHourNum, sMinNum, eMinNum, holidays)
+			visitMetric=calcTimeIntervals(obj$ti,obj$ts,SEEN_MAX)
 		} else if(metric==WAIT_ID)
 		{
-			visitMetric=calcTimeIntervals(obj$ti,obj$tdisp,DISP_MAX,dow,sHourNum,eHourNum, sMinNum, eMinNum, holidays)
+			visitMetric=calcTimeIntervals(obj$ti,obj$tdisp,DISP_MAX)
 		} else if(metric==BOARD_DO)
 		{
-			visitMetric=calcTimeIntervals(obj$td,obj$to,BOARD_MAX,dow,sHourNum,eHourNum, sMinNum, eMinNum, holidays)
-		} else if(metric==BOARD_RO)
-		{
-			visitMetric=calcTimeIntervals(obj$tr,obj$to,BOARD_MAX,dow,sHourNum,eHourNum, sMinNum, eMinNum, holidays)
-		} else if(metric==BOARD_RA)
-		{
-			visitMetric=calcTimeIntervals(obj$tr,obj$ta,BOARD_MAX,dow,sHourNum,eHourNum, sMinNum, eMinNum, holidays)
-		} else if(metric==BOARD_AO)
-		{
-			visitMetric=calcTimeIntervals(obj$ta,obj$to,BOARD_MAX,dow,sHourNum,eHourNum, sMinNum, eMinNum, holidays)
-		}			
+			visitMetric=calcTimeIntervals(obj$td,obj$to,BOARD_MAX)
+		} 			
 
 		# update message
 		msg[[length(msg)+1]]=paste(" Number of visits analyzed = ",length(which(!is.na(visitMetric)))," / ",length(visitMetric),sep="")
@@ -623,6 +621,7 @@ plotMetric=function(preproc,obj, locName, metric, agg, start, end, dow, md, disp
 			# visit metric, acuity
 			indeces=match(obj$acuity,names(MAP_ACUITY))
 			visAcuity=factor(MAP_ACUITY[indeces],levels=as.character(MAP_ACUITY))
+			#visAcuity=factor(MAP_ACUITY[obj$acuity],levels=as.character(MAP_ACUITY))
 			if(metric==BOARD_DO)
 			{
 				visAcuity=visAcuity[which(!is.na(obj$td))]
