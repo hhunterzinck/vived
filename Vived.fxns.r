@@ -70,6 +70,12 @@ createPlot=function(raw, dateRange, metric, agg, md, dow, disp, acuity,
 		msg="Data file lacks required column(s) named \"PatientID\", \"TimeIn\", and/or \"TimeOut\".  Please check data file format."
 		return(plotInvalid(msg))
 	}
+
+	# globally assign color maps for acuity and disposition
+	uAcuity=getAcuity(raw)
+	uDisp=getDispositions(raw)
+	COLOR_ACUITY<<-assignColorFromPal(PAL_ACUITY,PAL_ACUITY_BACKUP,uAcuity)
+	COLOR_DISP<<-assignColorFromPal(PAL_DISP,PAL_DISP_BACKUP,uDisp)
 	
 	# preprocess for validity
 	preproc=preprocess(raw)

@@ -565,12 +565,12 @@ discretizeAge=function(vec)
 	
 	# set boundary cases
 	descritizedAge[which(decades<0 | is.na(decades))]=UNKNOWN_STRING
-	descritizedAge[which(decades<20 & decades>=0)]="<20"
-	descritizedAge[which(decades>=100)]=">=100"
+	#descritizedAge[which(decades<20 & decades>=0)]="<20"
+	descritizedAge[which(decades>=90)]="90+"
 	
 	# set non-boundary cases
-	indeces=which(decades>=20 & decades<100)
-	descritizedAge[indeces]=paste(decades[indeces],"s",sep="")
+	#indeces=which(decades<90 & decades!=UNKNOWN_STRING)
+	#descritizedAge[indeces]=paste(decades[indeces],"s",sep="")
 	
 	return(descritizedAge)
 }

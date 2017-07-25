@@ -429,7 +429,8 @@ getPlottingParameters=function(locName, metric, obj)
 	{
 		# get colors, national dispositions should be consistent
 		uAcuity=arrangeUnknown(sort(unique(obj$acuity)),uValue=UNKNOWN_STRING,uLast=FALSE)
-		myColors=assignColorFromPal(PAL_ACUITY,PAL_ACUITY_BACKUP,uAcuity)
+		#myColors=assignColorFromPal(PAL_ACUITY,PAL_ACUITY_BACKUP,uAcuity)
+		myColors=COLOR_ACUITY[uAcuity]
 		
 		params$myColors=myColors
 		params$myLevels=uAcuity
@@ -439,7 +440,8 @@ getPlottingParameters=function(locName, metric, obj)
 		# get colors, national dispositions should be consistent
 		uDisp=names(sort(table(obj$disp),decreasing=FALSE,na.last=FALSE))
 		uDisp=arrangeUnknown(uDisp,uValue=UNKNOWN_STRING,uLast=FALSE)
-		myColors=assignColorFromPal(PAL_DISP,PAL_DISP_BACKUP,uDisp)
+		#myColors=assignColorFromPal(PAL_DISP,PAL_DISP_BACKUP,uDisp)
+		myColors=COLOR_DISP[uDisp]
 					
 		# store in parameter object
 		params$myColors=myColors
@@ -450,7 +452,8 @@ getPlottingParameters=function(locName, metric, obj)
 		# get colors, national dispositions should be consistent
 		uAge=as.character(sort(factor(unique(obj$age),levels=as.character(MAP_AGE)),decreasing=TRUE))
 		uAge=arrangeUnknown(uAge,uValue=UNKNOWN_STRING,uLast=FALSE)
-		myColors=assignColorFromPal(PAL_AGE,PAL_AGE_BACKUP,uAge, reverse=TRUE)
+		#myColors=assignColorFromPal(PAL_AGE,PAL_AGE_BACKUP,uAge, reverse=TRUE)
+		myColors=COLOR_AGE[uAge]
 
 		# green-blue gradient
 		params$myColors=myColors

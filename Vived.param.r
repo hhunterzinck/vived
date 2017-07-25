@@ -164,8 +164,8 @@ DISP_ADMIT=scan(FILE_DISP_ADMIT,what="character", quiet=QUIET)
 
 # metric maps creating levels in ggplot2
 MAP_ACUITY=setNames(c("1","2","3","4","5","Unknown"), c("1","2","3","4","5","Unknown"))
-MAP_AGE=setNames(c(UNKNOWN_STRING,"<20","20s","30s","40s","50s","60s","70s","80s","90s",">=100"),
-	c(UNKNOWN_STRING,"<20","20s","30s","40s","50s","60s","70s","80s","90s",">=100"))
+MAP_AGE=setNames(c(UNKNOWN_STRING,"0","10","20","30","40","50","60","70","80","90+"),
+	c(UNKNOWN_STRING,"0","10","20","30","40","50","60","70","80","90+"))
 MAP_PROG=setNames(c("In - triage","Triage - doc","Doc - disp","Disp - out"),c("it","ts","sd","dop"))
 MAP_STATUS=rev(setNames(c("Home", "Admit before disposition", "Admit after disposition","Boarding > 4h"),c("io","id","do","bo")))
 MAP_ALL_OCC=c(MAP_ACUITY, MAP_AGE,MAP_PROG, MAP_STATUS)
@@ -240,9 +240,11 @@ CHOICES_ACUITY=c(ALL_ACUITY,as.character(ACUITY_MAP))
 
 # plotting parameters for both
 COLOR_BARS=rev(c("blue","cyan","gold","red"))
-COLOR_ACUITY=setNames(c("red","orange","yellow","green","blue",UNKNOWN_COLOR), c("1","2","3","4","5",UNKNOWN_STRING))
+#COLOR_ACUITY=setNames(c("red","orange","yellow","green","blue",UNKNOWN_COLOR), c("1","2","3","4","5",UNKNOWN_STRING))
+COLOR_ACUITY=c()
+COLOR_DISP=c()
 COLOR_PROG=c("green","purple","gray","black")
-COLOR_AGE=setNames(c(brewer.pal(9,"GnBu"),"black",UNKNOWN_COLOR),c("10","20","30","40","50","60","70","80","90","100","-1"))
+COLOR_AGE=setNames(c(brewer.pal(9,"GnBu"),"black",UNKNOWN_COLOR),c("0","10","20","30","40","50","60","70","80","90+",UNKNOWN_STRING))
 PAL_DISP="Set3"
 PAL_DISP_BACKUP="Dark2"
 PAL_ACUITY="Spectral"
