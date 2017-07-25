@@ -324,11 +324,13 @@ plotMetric=function(preproc,obj, locName, metric, agg, start, end, dow, md, disp
 		{
 			# percentage of visits for preprocessed and filtered
 			dayMetricFil=calcNumVisit(obj,start, nday, dow, sHourNum, eHourNum, sMinNum, eMinNum, holidays, agg=agg)
-			dayMetricTotal=calcNumVisit(preproc,start, nday, LABEL_DOW, 0, 23, 0, 59, holidays, agg=agg)
 			
 			# calculate percentage over vector or matrix
 			if(agg!=HOUR)
 			{
+				# get denominator 
+				dayMetricTotal=calcNumVisit(preproc,start, nday, LABEL_DOW, 0, 23, 0, 59, holidays, agg=agg)
+
 				# align and divide to get percentage and account for dividing by 0
 				indeces=match(names(dayMetricFil),names(dayMetricTotal))
 				dayMetric=dayMetricFil/dayMetricTotal[indeces]*100
@@ -336,6 +338,9 @@ plotMetric=function(preproc,obj, locName, metric, agg, start, end, dow, md, disp
 				names(dayMetric)=names(dayMetricFil)
 			} else
 			{
+				# get denominator (without hours)
+				dayMetricTotal=calcNumVisit(preproc,start, nday, LABEL_DOW, sHourNum, eHourNum, sMinNum, eMinNum, holidays, agg=agg)
+
 				# align and divide to get percentage and account for dividing by 0
 				indeces=match(rownames(dayMetricFil),rownames(dayMetricTotal))
 				dayMetric=dayMetricFil/dayMetricTotal[indeces,]*100
@@ -349,11 +354,13 @@ plotMetric=function(preproc,obj, locName, metric, agg, start, end, dow, md, disp
 		
 			# percentage of visits for preprocessed and filtered
 			dayMetricSubset=calcNumVisit(updateObj(obj,indeces),start, nday, dow, sHourNum, eHourNum, sMinNum, eMinNum, holidays, agg=agg)
-			dayMetricFil=calcNumVisit(obj,start, nday, LABEL_DOW, 0, 23, 0, 59, holidays, agg=agg)
 			
 			# calculate percentage over vector or matrix
 			if(agg!=HOUR)
 			{
+				# get denomintor
+				dayMetricFil=calcNumVisit(obj,start, nday, LABEL_DOW, 0, 23, 0, 59, holidays, agg=agg)
+
 				# align and divide to get percentage and account for dividing by 0 for vector
 				indeces=match(names(dayMetricFil),names(dayMetricSubset))
 				dayMetric=dayMetricSubset[indeces]/dayMetricFil*100
@@ -361,6 +368,9 @@ plotMetric=function(preproc,obj, locName, metric, agg, start, end, dow, md, disp
 				names(dayMetric)=names(dayMetricFil)
 			} else
 			{
+				# get denominator
+				dayMetricFil=calcNumVisit(obj,start, nday, LABEL_DOW, sHourNum, eHourNum, sMinNum, eMinNum, holidays, agg=agg)
+		
 				# align and divide to get percentage and account for dividing by 0 for matrix
 				indeces=match(rownames(dayMetricFil),rownames(dayMetricSubset))
 				dayMetric=dayMetricSubset[indeces,]/dayMetricFil*100
@@ -503,7 +513,7 @@ plotMetric=function(preproc,obj, locName, metric, agg, start, end, dow, md, disp
 		} else if(agg==HOUR)
 		{
 			# add missing hours
-			missingHours=setdiff(c(0:23),as.double(colnames(dayMetric)))
+			missingHours=setdiff(getHours(sHourNum, eHourNum),as.double(colnames(dayMetric)))
 			if(length(missingHours)>0)
 			{
 				aIndeces=(ncol(dayMetric)+1):(ncol(dayMetric)+length(missingHours))

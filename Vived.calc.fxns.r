@@ -131,10 +131,14 @@ calcNumVisit=function(obj, start, nday, dow, sHourNum, eHourNum, sMinNum, eMinNu
 		nvisit=table(format(obj$ti[indeces],"%Y-%m-%d"),as.double(format(obj$ti[indeces],"%H")))
 		
 		# add missing hours
-		missingHours=setdiff(c(0:23), as.double(colnames(nvisit)))
-		colLabels=c(colnames(nvisit),missingHours)
-		nvisit=cbind(nvisit,matrix(0,nrow=nrow(nvisit),ncol=length(missingHours)))
-		colnames(nvisit)=colLabels
+		missingHours=setdiff(getHours(sHourNum, eHourNum), as.double(colnames(nvisit)))
+		if(length(missingHours>0))
+		{
+			colLabels=c(colnames(nvisit),missingHours)
+			nvisit=cbind(nvisit,matrix(0,nrow=nrow(nvisit),ncol=length(missingHours)))
+			colnames(nvisit)=colLabels
+			nvisit=nvisit[,order(as.double(colnames(nvisit)))]
+		}
 	} else
 	{
 		nvisit=table(format(obj$ti[indeces],"%Y-%m-%d"))
@@ -377,10 +381,10 @@ getHours=function(sHourNum, eHourNum)
 	# get valid hours in time range
 	if(sHourNum<eHourNum)
 	{
-		hours=c(sHourNum:(eHourNum-1))
+		hours=c(sHourNum:eHourNum)
 	} else
 	{
-		hours=c(c(sHourNum:23),c(0:(eHourNum-1)))
+		hours=c(c(sHourNum:23),c(0:eHourNum))
 	}
 
 	return(hours)
