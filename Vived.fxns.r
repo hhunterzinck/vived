@@ -558,7 +558,8 @@ plotMetric=function(preproc,obj, locName, metric, agg, start, end, dow, md, disp
 			visitMetric=calcTimeIntervals(obj$ti,obj$tdisp,DISP_MAX)
 		} else if(metric==BOARD_DO)
 		{
-			visitMetric=calcTimeIntervals(obj$td,obj$to,BOARD_MAX)
+			visitMetric=calcTimeIntervals(obj$tdisp,obj$to,BOARD_MAX)
+			names(visitMetric)=obj$ti
 		} 			
 
 		# update message
@@ -622,10 +623,6 @@ plotMetric=function(preproc,obj, locName, metric, agg, start, end, dow, md, disp
 			indeces=match(obj$acuity,names(MAP_ACUITY))
 			visAcuity=factor(MAP_ACUITY[indeces],levels=as.character(MAP_ACUITY))
 			#visAcuity=factor(MAP_ACUITY[obj$acuity],levels=as.character(MAP_ACUITY))
-			if(metric==BOARD_DO)
-			{
-				visAcuity=visAcuity[which(!is.na(obj$td))]
-			}
 			myPlot=plotBoxplot(visitMetric, visAcuity, metric)
 			myTable=makeTable(visitMetric, agg, visAcuity)
 		} else if(agg==BY_DISP)
@@ -634,20 +631,12 @@ plotMetric=function(preproc,obj, locName, metric, agg, start, end, dow, md, disp
 			visDisp=obj$disp
 			visDisp[which(is.na(visDisp))]=obj$disp[which(is.na(visDisp))]
 			visDisp=factor(visDisp)
-			if(metric==BOARD_DO)
-			{
-				visDisp=visDisp[which(!is.na(obj$td))]
-			}
 			myPlot=plotBoxplot(visitMetric, visDisp, metric)
 			myTable=makeTable(visitMetric, agg, visDisp)
 		} else if(agg==BY_PROV)
 		{
 			# visit metric, acuity
 			visProv=factor(obj$md)
-			if(metric==BOARD_DO)
-			{
-				visProv=visProv[which(!is.na(obj$td))]
-			}
 			myPlot=plotBoxplot(visitMetric, visProv, metric)
 			myTable=makeTable(visitMetric, agg, visProv)
 		} else if(agg==WEEK)
