@@ -21,6 +21,9 @@ library(ggplot2)
 library(DT)
 source("Vived.fxns.r")
 
+# modify options
+options(shiny.maxRequestSize=30*1024^2)
+
 # page
 ui = navbarPage(
 	title=paste("VIVED v",VERSION,sep=""),
@@ -80,6 +83,16 @@ ui = navbarPage(
 # server
 server <- function(input, output) 
 {	
+	# read data from file
+	obj=eventReactive(input$efile, 
+	{
+		withProgress(message="Reading data...",detail="This may take a few seconds", style="notification", value=NULL, 
+		{
+			obj=readVisitData(input$efile$datapath)
+		})
+		return(obj)
+	})
+
 	# setup aggregate views
 	output$aggControls <- renderUI({
 		views=getViews(input$metric)
@@ -100,7 +113,8 @@ server <- function(input, output)
 			dateRangeForLoc=c(NA,NA)
 		} else
 		{
-			dateRangeForLoc=getDefaultDateRange(input$efile$datapath)
+			#dateRangeForLoc=getDefaultDateRange(input$efile$datapath)
+			dateRangeForLoc=getDefaultDateRange(obj())
 		}
 		dateRangeInput(inputId="dateRange", label="Date range: ", start=dateRangeForLoc[1], end=dateRangeForLoc[2])
 	})
@@ -112,7 +126,7 @@ server <- function(input, output)
 			myChoices=c(ALL_DISP)
 		} else
 		{
-			dispositions=getDispositions(input$efile$datapath)
+			dispositions=getDispositions(obj())
 			if(length(intersect(DISP_ADMIT,dispositions))>0)
 			{
 				myChoices=c(ALL_DISP,ALL_ADMIT,dispositions)
@@ -131,7 +145,7 @@ server <- function(input, output)
 			myChoices=c(ALL_ACUITY)
 		} else
 		{
-			acuity=getAcuity(input$efile$datapath)
+			acuity=getAcuity(obj())
 			myChoices=c(ALL_ACUITY, acuity)
 		}
 		selectInput(inputId="acuity", label="Acuity: ", choices=myChoices)
@@ -144,7 +158,7 @@ server <- function(input, output)
 			myChoices=ALL_MD
 		} else
 		{
-			providers=getProviders(input$efile$datapath)
+			providers=getProviders(obj())
 			myChoices=c(ALL_MD,providers)
 		}
 		selectInput(inputId="md", label="Provider: ", choices=myChoices)
@@ -155,7 +169,7 @@ server <- function(input, output)
 	{
 		withProgress(message="Creating plot...",detail="This may take a few seconds", style="notification", value=NULL, 
 		{
-			results=createPlot(efile=input$efile$datapath, dateRange=input$dateRange, metric=input$metric, 
+			results=createPlot(raw=obj(), dateRange=input$dateRange, metric=input$metric, 
 				agg=input$agg, md=input$md, dow=input$dow, disp=input$disp, acuity=input$acuity, 
 				sHour=input$sHour, eHour=input$eHour, sMin=input$sMin, eMin=input$eMin,
 				excludeHolidays=input$holiday)

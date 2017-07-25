@@ -124,37 +124,38 @@ readVisitData=function(efile)
 }
 
 # get list of unique providers at currently selected location
-getProviders=function(efile)
+getProviders=function(obj)
 {
 	# read and extract unique providers
-	obj=readVisitData(efile)
+	#obj=readVisitData(efile)
 	mds=sort(unique(obj$md))
 	return(mds)
 }
 
 # get list of unique dispositions at currently selected location
-getDispositions=function(efile)
+getDispositions=function(obj)
 {
 	# read and extract unique providers
-	obj=readVisitData(efile)
+	#obj=readVisitData(efile)
 	disps=sort(unique(obj$disp))
 	return(disps)
 }
 
 # get list of unique acuity values at currently selected location
-getAcuity=function(efile)
+getAcuity=function(obj)
 {
 	# read and extract unique providers
-	obj=readVisitData(efile)
+	#obj=readVisitData(efile)
 	acuity=sort(unique(obj$acuity), na.last=TRUE)
 	return(acuity)
 }
 
 # get max and min time in for institution
-getDefaultDateRange=function(efile)
+#getDefaultDateRange=function(efile)
+getDefaultDateRange=function(obj)
 {
 	# read data and get max and min time in
-	obj=readVisitData(efile)
+	#obj=readVisitData(efile)
 	if(!is.na(obj$ti[1]))
 	{
 		dateRange=c(as.character(format(min(obj$ti,na.rm=TRUE),"%Y-%m-%d")),as.character(format(max(obj$ti,na.rm=TRUE),"%Y-%m-%d")))

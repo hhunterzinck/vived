@@ -40,7 +40,7 @@ if(testing==1)
 #####################################################
 
 # plot according to criteria
-createPlot=function(efile, dateRange, metric, agg, md, dow, disp, acuity, 
+createPlot=function(raw, dateRange, metric, agg, md, dow, disp, acuity, 
 	sHour, eHour, sMin, eMin, excludeHolidays)
 {	
 	if(DEBUG)
@@ -64,7 +64,7 @@ createPlot=function(efile, dateRange, metric, agg, md, dow, disp, acuity,
 	}
 
 	# read data and process for validity
-	raw=readVisitData(efile)
+	#raw=readVisitData(efile)
 	if(length(raw$ti==1) && is.na(raw$ti[1]))
 	{
 		msg="Data file lacks required column(s) named \"PatientID\", \"TimeIn\", and/or \"TimeOut\".  Please check data file format."
