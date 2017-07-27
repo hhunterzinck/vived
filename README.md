@@ -1,8 +1,8 @@
-#Manual for VIVED v0.5
-##Description
+# Manual for VIVED v0.5
+## Description
 The Visit Information Visualization for the Emergency Department (VIVED) tool is a HTML dashboard implemented in R with the Shiny package to examine patient flow through an emergency department (ED) or urgent care center (UCC).  Users can filter data to their specifications including by date, day of the week, time of the day, patient disposition, and provider.  Users can then plot metrics such as number of visits per day, fraction of patients admitted per day, length of stay, boarding time, and ED census.
 
-##Installation 
+## Installation 
 * Install R version 3.3.1 or greater
     * https://www.r-project.org/
 * Install required R packages
@@ -21,7 +21,7 @@ The Visit Information Visualization for the Emergency Department (VIVED) tool is
         * "ICU"
     * If no dispositions result in admission or dispositions are unknown, leave this file empty.
     
-##Running VIVED
+## Running VIVED
 * After installation, open an R terminal.
 * Set the working directory to the decompressed VIVED package directory. 
     * setwd("/path/to/files/vived/")
@@ -30,7 +30,7 @@ The Visit Information Visualization for the Emergency Department (VIVED) tool is
     * runApp("Vived.r")
 * The app should open in your default web browser.
 
-##Input file
+## Input file
 The input file containing ED or UCC visit information must be in comma-separated values (CSV) format with one header row and each remaining row representing a unique ED visit.  Columns, along with their header labels, are described in the following table: 
 
 Header label | Required | Date type | Description
@@ -50,14 +50,14 @@ AgeAtVisit | No | Integer | Age of the patient on the day of the visit in years
 All timestamps must be in the form "YYYY-MM-DD HH:MM:SS".  Columns do not have to be in order and additional columns may be included, but the column headers must be exact, including capitalization.  Columns that are not required do not have to be included in the input file.  However, visualizations involving non-essential data elements will not be available if the respective columns are not included.
 
 
-##Dashboard tab
-###File
+## Dashboard tab
+### File
 Users can select an input file (format described above) on their local hard drive using the "Browse" button.  
 
-###Date range
+### Date range
 This dropdown allows users to select a start and end date for filtering the dataset.  Users may type in the dates (format is "YYYY-MM-DD") or click on the boxes and select dates in a dropdown calendar.  The default range is set to the dates of of the time of arrival of the first and last visit in the dataset.  
 
-###Metric
+### Metric
 This dropdown menu allows users to select a metric to display.  Currently implemented metrics are as follows:
 
 Metric | Unit | Description
@@ -107,31 +107,31 @@ Visit|X|X|X|X|X|X|X|X||X|X|X
 Census|X|X|X|X|X|X|X|X|X||
 
 
-###Disposition
+### Disposition
 This dropdown allows the user to filter patient visits by the patient disposition assigned during the visit.  This dropdown updates dynamically to display all unique dispositions in the full dataset.  The default is "All".  
 
-###Acuity
+### Acuity
 This dropdown allows the user to filter patient visits by the assigned acuity (e.g. Emergency Severity Index).  This dropdown updates dynamically to display all unique acuity labels in the full dataset.  The default is "All".
 
-###Provider
+### Provider
 This dropdown allows the user to filter patient visits by the provider assigned to the patient during the visit.  This dropdown updates dynamically to display all unique providers in the full dataset.  The default is "All".
 
-###Start hour/minute and end hour/minute
+### Start hour/minute and end hour/minute
 These four dropdowns allow the user to filter patient visits within a particular time interval of day.  The start time and end time are inclusive of the selected minute.  For census metrics, the census is set to missing during these periods and so is not displayed or included in any visualization.  For other metrics, patient visits are excluded if the time in associated with the visit lies outside the requested time interval.  The default is to include all hours (i.e. start time: "00:00" and end time "23:59").
 
-###Days of the week
+### Days of the week
 This group of checkboxes allows the user to select any combination of days of the week to filter patient visits.  Any patient visit's time in which lies in a checked day of the week will be retained for analysis and visualization.  The default is to include all days of the week.
 
-###Exclude federal holidays
+### Exclude federal holidays
 When checked, this option allows users to display visualizations and tables calculated without visits occurring on the ten annual federal holidays.  A list of federal holidays is available on the U.S. Office of Personnel Management website.
 
-###Run 
+### Run 
 Having selected all appropriate filters and options, the user can click the "Run" button to produce the respective visualization and table.  Depending on the size of the dataset and the metric selected, the visualization may take as much as several seconds to produce.  ED census plots are particularly time consuming when calculated over long ranges of time, so starting with a smaller time interval (e.g. one week) is recommended.
 
-###Download plot
+### Download plot
 Having produced a plot, the user can click the "Download plot" button to save a PDF of the visualization.  A file explorer box will appear asking the user to select a folder in which to save the plot.   
 
-###Download table
+### Download table
 Having produced a plot and table, the user can click the "Download table" button to save a CSV file of the respective table.  A file explorer box will appear asking the user to select a folder in which to save the table.    
 
 
